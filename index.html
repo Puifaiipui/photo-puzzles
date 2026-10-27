@@ -11,8 +11,8 @@
             --primary: #6366f1;
             --primary-hover: #4f46e5;
             --accent: #ec4899;
-            --bg: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --bg-gradient: radial-gradient(circle at top, #1e1b4b, #0f172a);
+            --card-bg: rgba(30, 41, 59, 0.85);
             --text: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -25,7 +25,7 @@
         }
 
         body {
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            background: var(--bg-gradient);
             color: var(--text);
             min-height: 100vh;
             display: flex;
@@ -36,43 +36,57 @@
 
         .container {
             background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 28px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px;
+            padding: 32px;
             max-width: 440px;
             width: 100%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
 
+        .badge-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #818cf8, #6366f1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            font-size: 26px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, .4);
+        }
+
         h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            background: linear-gradient(135deg, #a5b4fc, #ec4899);
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #e0e7ff, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
 
         p.subtitle {
-            font-size: 0.875rem;
+            font-size: 0.92rem;
             color: var(--text-muted);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
-        /* Video & Canvas Container */
+        /* Media Box */
         .media-box {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             margin: 0 auto 20px auto;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             border: 2px solid rgba(255, 255, 255, 0.15);
-            background: #000;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: #090d16;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         video {
@@ -80,138 +94,209 @@
             height: 100%;
             object-fit: cover;
             transform: scaleX(-1);
-            /* Mirror view for camera */
         }
 
-        /* Control Buttons */
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background: var(--primary);
+        /* Buttons */
+        .btn-main {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 0.95rem;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 16px;
+            font-size: 0.88rem;
             font-weight: 600;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            transition: 0.2s;
         }
 
-        button:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        button.btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text);
-        }
-
-        button.btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* Stats Bar */
+        /* Stats bar */
         .stats-bar {
             display: flex;
             justify-content: space-around;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 16px;
             font-size: 0.9rem;
             color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .stats-bar span {
             color: var(--text);
-            font-weight: bold;
+            font-weight: 700;
         }
 
-        /* Jigsaw Grid */
+        /* Puzzle Board */
         #puzzle-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 4px;
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 15px auto;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 4px;
+            gap: 5px;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 16px auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .tile {
             position: relative;
             width: 100%;
             height: 100%;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            background-size: 300px 300px;
+            background-size: 308px 308px;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
         }
 
         .tile:hover {
-            transform: scale(0.97);
+            transform: scale(0.96);
         }
 
         .tile.selected {
             outline: 3px solid var(--accent);
-            transform: scale(0.93);
+            transform: scale(0.92);
             z-index: 10;
-            box-shadow: 0 0 15px var(--accent);
+            box-shadow: 0 0 20px var(--accent);
         }
 
         .tile-number {
             position: absolute;
-            top: 4px;
-            left: 4px;
-            background: rgba(0, 0, 0, 0.6);
+            top: 6px;
+            left: 6px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
             color: white;
             font-size: 0.75rem;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Win Banner */
-        #win-msg {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #10b981;
+        /* Modal Popup ชนะเกม */
+        #win-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #win-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 32px;
+            border-radius: 28px;
+            max-width: 360px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #win-modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .trophy-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            display: inline-block;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .modal-content h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
             color: #34d399;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            animation: popIn 0.3s ease;
+            margin-bottom: 6px;
         }
 
-        @keyframes popIn {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
+        .modal-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
 
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        .modal-stats {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
         }
     </style>
 </head>
@@ -219,43 +304,57 @@
 <body>
 
     <div class="container">
-        <h1>📸 3x3 Photo Jigsaw</h1>
-        <p class="subtitle">ถ่ายรูปตัวเองเพื่อสร้างเกมต่อจิ๊กซอว์!</p>
+        <div class="badge-icon">🧩</div>
+        <h1>Photo Jigsaw 3x3</h1>
+        <p class="subtitle">ถ่ายรูปหรือเลือกรูปภาพเพื่อสร้างเกมจิ๊กซอว์ของคุณ</p>
 
         <!-- 1. CAMERA SECTION -->
         <div id="camera-section">
             <div class="media-box">
                 <video id="webcam" autoplay playsinline></video>
             </div>
-            <div class="btn-group">
+            <button id="capture-btn" class="btn-main">📸 ถ่ายรูปเพื่อสร้างจิ๊กซอว์</button>
+            <div class="controls-row">
                 <button id="switch-cam-btn" class="btn-secondary">🔄 สลับกล้อง</button>
-                <button id="capture-btn">📸 ถ่ายรูปเล่นเกม</button>
             </div>
         </div>
 
         <!-- 2. GAME SECTION -->
         <div id="game-section" class="hidden">
             <div class="stats-bar">
-                <div>เดิน: <span id="move-count">0</span> ครั้ง</div>
-                <div>เวลา: <span id="timer">00:00</span></div>
+                <div>เวลาที่ใช้: <span id="timer">00:00</span></div>
+                <div>จำนวนการสลับ: <span id="move-count">0</span> ครั้ง</div>
             </div>
-
-            <div id="win-msg" class="hidden">🎉 สุดยอดไปเลย! ต่อจิ๊กซอว์สำเร็จแล้ว!</div>
 
             <div id="puzzle-board"></div>
 
-            <div class="btn-group">
-                <button id="hint-btn" class="btn-secondary">👁️ ซ่อน/แสดง ตัวเลขคำใบ้</button>
-                <button id="restart-btn">🔄 ถ่ายใหม่</button>
+            <div class="controls-row">
+                <button id="hint-btn" class="btn-secondary">👁️ ซ่อน/แสดง ตัวเลข</button>
+                <button id="restart-btn" class="btn-secondary">🔄 ถ่ายใหม่</button>
             </div>
         </div>
-
-        <!-- Hidden Canvas for Image Processing -->
-        <canvas id="hidden-canvas" style="display:none;"></canvas>
     </div>
 
+    <!-- WIN MODAL POPUP -->
+    <div id="win-modal">
+        <div class="modal-content">
+            <div class="trophy-icon">🏆</div>
+            <h2>ยินดีด้วย!</h2>
+            <p>คุณต่อจิ๊กซอว์สำเร็จแล้ว!</p>
+
+            <div class="modal-stats">
+                <div>เวลาที่ใช้<br><span id="final-time" style="color:#fff; font-weight:bold;">00:52</span></div>
+                <div style="border-left: 1px solid rgba(255,255,255,0.1);">จำนวนการสลับ<br><span id="final-moves"
+                        style="color:#fff; font-weight:bold;">17 ครั้ง</span></div>
+            </div>
+
+            <button id="modal-restart-btn" class="btn-main">🎉 เล่นใหม่อีกครั้ง</button>
+        </div>
+    </div>
+
+    <canvas id="hidden-canvas" style="display:none;"></canvas>
+
     <script>
-        // Elements
         const video = document.getElementById('webcam');
         const captureBtn = document.getElementById('capture-btn');
         const switchCamBtn = document.getElementById('switch-cam-btn');
@@ -264,14 +363,16 @@
         const gameSection = document.getElementById('game-section');
         const puzzleBoard = document.getElementById('puzzle-board');
         const restartBtn = document.getElementById('restart-btn');
+        const modalRestartBtn = document.getElementById('modal-restart-btn');
         const hintBtn = document.getElementById('hint-btn');
-        const winMsg = document.getElementById('win-msg');
+        const winModal = document.getElementById('win-modal');
         const moveCountEl = document.getElementById('move-count');
         const timerEl = document.getElementById('timer');
+        const finalTimeEl = document.getElementById('final-time');
+        const finalMovesEl = document.getElementById('final-moves');
 
-        // States
         let currentStream = null;
-        let facingMode = "user"; // 'user' (กล้องหน้า) หรือ 'environment' (กล้องหลัง)
+        let facingMode = "user";
         let currentPieces = [];
         let originalPieces = [];
         let selectedTileIndex = null;
@@ -281,7 +382,6 @@
         let secondsElapsed = 0;
         let isGameOver = false;
 
-        // 1. Start Camera
         async function startCamera() {
             if (currentStream) {
                 currentStream.getTracks().forEach(track => track.stop());
@@ -292,7 +392,7 @@
                 });
                 video.srcObject = currentStream;
             } catch (err) {
-                alert("ไม่สามารถเปิดกล้องได้ กรุณาอนุญาตสิทธิ์ใช้งานกล้องในเบราว์เซอร์");
+                alert("ไม่สามารถเปิดกล้องได้ กรุณาอนุญาตสิทธิ์ใช้งานกล้อง");
             }
         }
 
@@ -304,53 +404,46 @@
 
         startCamera();
 
-        // 2. Capture Photo & Generate Jigsaw
         captureBtn.addEventListener('click', () => {
             const ctx = hiddenCanvas.getContext('2d');
-            hiddenCanvas.width = 300;
-            hiddenCanvas.height = 300;
+            hiddenCanvas.width = 320;
+            hiddenCanvas.height = 320;
 
-            // Draw mirrored video if using front camera
             ctx.save();
             if (facingMode === "user") {
-                ctx.translate(300, 0);
+                ctx.translate(320, 0);
                 ctx.scale(-1, 1);
             }
-            ctx.drawImage(video, 0, 0, 300, 300);
+            ctx.drawImage(video, 0, 0, 320, 320);
             ctx.restore();
 
-            // Switch views
             cameraSection.classList.add('hidden');
             gameSection.classList.remove('hidden');
-
             initGame();
         });
 
-        // 3. Init Game Logic
         function initGame() {
             moves = 0;
             secondsElapsed = 0;
             isGameOver = false;
             selectedTileIndex = null;
-            winMsg.classList.add('hidden');
+            winModal.classList.remove('show');
             moveCountEl.innerText = moves;
             startTimer();
 
             const imageDataUrl = hiddenCanvas.toDataURL();
             originalPieces = [];
 
-            // Split 3x3
             for (let i = 0; i < 9; i++) {
                 const row = Math.floor(i / 3);
                 const col = i % 3;
                 originalPieces.push({
                     id: i,
-                    bgPosition: `-${col * 100}px -${row * 100}px`,
+                    bgPosition: `-${col * 106.66}px -${row * 106.66}px`,
                     imgUrl: imageDataUrl
                 });
             }
 
-            // Shuffle pieces (ensure it's not already solved)
             do {
                 currentPieces = [...originalPieces].sort(() => Math.random() - 0.5);
             } while (checkIsSolved());
@@ -358,7 +451,6 @@
             renderBoard();
         }
 
-        // 4. Render Board
         function renderBoard() {
             puzzleBoard.innerHTML = '';
             currentPieces.forEach((piece, index) => {
@@ -381,16 +473,14 @@
             });
         }
 
-        // 5. Handle Tile Click & Swapping
         function handleTileClick(index) {
             if (isGameOver) return;
 
             if (selectedTileIndex === null) {
                 selectedTileIndex = index;
             } else if (selectedTileIndex === index) {
-                selectedTileIndex = null; // deselect
+                selectedTileIndex = null;
             } else {
-                // Swap pieces
                 [currentPieces[selectedTileIndex], currentPieces[index]] =
                     [currentPieces[index], currentPieces[selectedTileIndex]];
 
@@ -405,7 +495,6 @@
             renderBoard();
         }
 
-        // 6. Check Win Condition
         function checkIsSolved() {
             return currentPieces.every((piece, idx) => piece.id === idx);
         }
@@ -413,19 +502,20 @@
         function handleWin() {
             isGameOver = true;
             clearInterval(timerInterval);
-            winMsg.classList.remove('hidden');
 
-            // Trigger Confetti Celebration
+            finalTimeEl.innerText = timerEl.innerText;
+            finalMovesEl.innerText = `${moves} ครั้ง`;
+            winModal.classList.add('show');
+
             if (typeof confetti === 'function') {
                 confetti({
-                    particleCount: 100,
-                    spread: 70,
+                    particleCount: 120,
+                    spread: 80,
                     origin: { y: 0.6 }
                 });
             }
         }
 
-        // 7. Timer & Helpers
         function startTimer() {
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
@@ -441,11 +531,16 @@
             renderBoard();
         });
 
-        restartBtn.addEventListener('click', () => {
+        const resetToCamera = () => {
             clearInterval(timerInterval);
+            winModal.classList.remove('show');
             gameSection.classList.add('hidden');
             cameraSection.classList.remove('hidden');
-        });
+            startCamera();
+        };
+
+        restartBtn.addEventListener('click', resetToCamera);
+        modalRestartBtn.addEventListener('click', resetToCamera);
     </script>
 </body>
 
