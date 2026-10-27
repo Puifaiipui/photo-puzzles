@@ -87,7 +87,6 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Media Box */
         .media-box {
             position: relative;
             width: 300px;
@@ -107,7 +106,6 @@
             transform: scaleX(-1);
         }
 
-        /* Buttons */
         .btn-main {
             width: 100%;
             background: linear-gradient(135deg, #6366f1, #4f46e5);
@@ -159,7 +157,6 @@
             display: none !important;
         }
 
-        /* Stats bar */
         .stats-row {
             display: flex;
             justify-content: space-between;
@@ -194,7 +191,6 @@
             background: rgba(99, 102, 241, 0.3);
         }
 
-        /* Puzzle Board */
         #puzzle-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -231,8 +227,8 @@
             box-shadow: 0 0 20px var(--accent);
         }
 
-        /* Peek Modal */
-        #peek-modal {
+        /* Modal Layout แบบควบคุมด้วย JavaScript ตรงๆ ป้องกันการค้าง */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -241,18 +237,12 @@
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(8px);
             display: none;
-            /* ใช้ display block/none ตัดปัญหาการค้างคาดเคลื่อนของ pointer-events */
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 99999;
         }
 
-        #peek-modal.active {
-            display: flex;
-        }
-
-        .peek-content {
-            position: relative;
+        .modal-box {
             background: #1e293b;
             border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 24px;
@@ -263,7 +253,7 @@
             width: 90%;
         }
 
-        .peek-content img {
+        .modal-box img {
             width: 280px;
             height: 280px;
             border-radius: 16px;
@@ -271,36 +261,6 @@
             margin: 0 auto 16px auto;
             object-fit: cover;
             border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Win Modal */
-        #win-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        #win-modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 32px;
-            border-radius: 28px;
-            max-width: 360px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
         }
 
         .trophy-icon {
@@ -373,16 +333,16 @@
     </div>
 
     <!-- PEEK IMAGE MODAL -->
-    <div id="peek-modal">
-        <div class="peek-content">
+    <div id="peek-modal" class="modal-overlay">
+        <div class="modal-box">
             <img id="peek-img" src="" alt="Full Image">
             <button id="close-peek-btn" class="btn-main">✕ ปิดรูปภาพ</button>
         </div>
     </div>
 
     <!-- WIN MODAL -->
-    <div id="win-modal">
-        <div class="modal-content">
+    <div id="win-modal" class="modal-overlay">
+        <div class="modal-box">
             <div class="trophy-icon">🏆</div>
             <h2 style="color:#34d399; font-size:1.5rem; margin-bottom:6px;">ยินดีด้วย!</h2>
             <p style="color:var(--text-muted); font-size:0.9rem;">คุณต่อจิ๊กซอว์สำเร็จแล้ว!</p>
@@ -476,8 +436,8 @@
             secondsElapsed = 0;
             isGameOver = false;
             selectedTileIndex = null;
-            winModal.classList.remove('active');
-            peekModal.classList.remove('active');
+            winModal.style.display = 'none';
+            peekModal.style.display = 'none';
             moveCountEl.innerText = moves;
             startTimer();
 
@@ -554,7 +514,7 @@
             finalTimeEl.innerText = `${mins}:${secs}`;
             finalMovesEl.innerText = `${moves} ครั้ง`;
 
-            winModal.classList.add('active');
+            winModal.style.display = 'flex';
 
             if (typeof confetti === 'function') {
                 confetti({
@@ -572,18 +532,18 @@
             }, 1000);
         }
 
-        // แก้ไขระบบเปิด-ปิด Modal ด้วย Class 'active' และใช้ display block/none ป้องกันการบล็อกคลิก
+        // ควบคุมการเปิด-ปิดแบบใช้ style.display ตรงๆ รับรองไม่ค้างแน่นอน
         peekBtn.addEventListener('click', () => {
-            peekModal.classList.add('active');
+            peekModal.style.display = 'flex';
         });
 
         closePeekBtn.addEventListener('click', () => {
-            peekModal.classList.remove('active');
+            peekModal.style.display = 'none';
         });
 
         peekModal.addEventListener('click', (e) => {
             if (e.target === peekModal) {
-                peekModal.classList.remove('active');
+                peekModal.style.display = 'none';
             }
         });
 
@@ -591,8 +551,8 @@
 
         const backToCamera = () => {
             clearInterval(timerInterval);
-            winModal.classList.remove('active');
-            peekModal.classList.remove('active');
+            winModal.style.display = 'none';
+            peekModal.style.display = 'none';
             gameSection.classList.add('hidden');
             cameraSection.classList.remove('hidden');
             startCamera();
