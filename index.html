@@ -66,6 +66,7 @@
             margin-bottom: 6px;
             background: linear-gradient(135deg, #e0e7ff, #f472b6);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
         }
@@ -230,7 +231,7 @@
             box-shadow: 0 0 20px var(--accent);
         }
 
-        /* Peek Modal (กดคลิกเพื่อเปิด-ปิด) */
+        /* Peek Modal */
         #peek-modal {
             position: fixed;
             top: 0;
@@ -238,36 +239,38 @@
             width: 100%;
             height: 100%;
             background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(6px);
-            display: flex;
+            backdrop-filter: blur(8px);
+            display: none;
+            /* ใช้ display block/none ตัดปัญหาการค้างคาดเคลื่อนของ pointer-events */
             justify-content: center;
             align-items: center;
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
+            z-index: 9999;
         }
 
-        #peek-modal.show {
-            opacity: 1;
-            pointer-events: auto;
+        #peek-modal.active {
+            display: flex;
         }
 
         .peek-content {
-            background: var(--card-bg);
+            position: relative;
+            background: #1e293b;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 20px;
-            border-radius: 20px;
+            padding: 24px;
+            border-radius: 24px;
             text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            max-width: 340px;
+            width: 90%;
         }
 
         .peek-content img {
             width: 280px;
             height: 280px;
-            border-radius: 12px;
+            border-radius: 16px;
             display: block;
-            margin-bottom: 10px;
+            margin: 0 auto 16px auto;
             object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Win Modal */
@@ -279,18 +282,14 @@
             height: 100%;
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(8px);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            z-index: 1000;
         }
 
-        #win-modal.show {
-            opacity: 1;
-            pointer-events: auto;
+        #win-modal.active {
+            display: flex;
         }
 
         .modal-content {
@@ -373,11 +372,11 @@
         </div>
     </div>
 
-    <!-- PEEK IMAGE MODAL (คลิกเปิด-ปิดได้สะดวก) -->
+    <!-- PEEK IMAGE MODAL -->
     <div id="peek-modal">
         <div class="peek-content">
             <img id="peek-img" src="" alt="Full Image">
-            <button id="close-peek-btn" class="btn-secondary" style="width:100%;">✖️ ปิดรูปภาพ</button>
+            <button id="close-peek-btn" class="btn-main">✕ ปิดรูปภาพ</button>
         </div>
     </div>
 
@@ -477,7 +476,8 @@
             secondsElapsed = 0;
             isGameOver = false;
             selectedTileIndex = null;
-            winModal.classList.remove('show');
+            winModal.classList.remove('active');
+            peekModal.classList.remove('active');
             moveCountEl.innerText = moves;
             startTimer();
 
@@ -554,7 +554,7 @@
             finalTimeEl.innerText = `${mins}:${secs}`;
             finalMovesEl.innerText = `${moves} ครั้ง`;
 
-            winModal.classList.add('show');
+            winModal.classList.add('active');
 
             if (typeof confetti === 'function') {
                 confetti({
@@ -572,18 +572,27 @@
             }, 1000);
         }
 
-        // ระบบคลิกเปิด-ปิดปุ่มดูรูปเต็ม
-        peekBtn.addEventListener('click', () => peekModal.classList.add('show'));
-        closePeekBtn.addEventListener('click', () => peekModal.classList.remove('show'));
+        // แก้ไขระบบเปิด-ปิด Modal ด้วย Class 'active' และใช้ display block/none ป้องกันการบล็อกคลิก
+        peekBtn.addEventListener('click', () => {
+            peekModal.classList.add('active');
+        });
+
+        closePeekBtn.addEventListener('click', () => {
+            peekModal.classList.remove('active');
+        });
+
         peekModal.addEventListener('click', (e) => {
-            if (e.target === peekModal) peekModal.classList.remove('show');
+            if (e.target === peekModal) {
+                peekModal.classList.remove('active');
+            }
         });
 
         restartBtn.addEventListener('click', shuffleAndRender);
 
         const backToCamera = () => {
             clearInterval(timerInterval);
-            winModal.classList.remove('show');
+            winModal.classList.remove('active');
+            peekModal.classList.remove('active');
             gameSection.classList.add('hidden');
             cameraSection.classList.remove('hidden');
             startCamera();
