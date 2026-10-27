@@ -40,7 +40,7 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 28px;
-            padding: 32px;
+            padding: 28px;
             max-width: 440px;
             width: 100%;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -55,15 +55,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 16px auto;
+            margin: 0 auto 14px auto;
             font-size: 26px;
             box-shadow: 0 10px 20px rgba(99, 102, 241, .4);
         }
 
         h1 {
-            font-size: 1.75rem;
+            font-size: 1.6rem;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             background: linear-gradient(135deg, #e0e7ff, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -71,17 +71,27 @@
         }
 
         p.subtitle {
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+        }
+
+        .instruction-bar {
+            background: rgba(255, 255, 255, 0.06);
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         /* Media Box */
         .media-box {
             position: relative;
-            width: 320px;
-            height: 320px;
-            margin: 0 auto 20px auto;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 16px auto;
             border-radius: 20px;
             overflow: hidden;
             border: 2px solid rgba(255, 255, 255, 0.15);
@@ -103,7 +113,7 @@
             color: white;
             border: none;
             padding: 14px 20px;
-            font-size: 1rem;
+            font-size: 0.98rem;
             font-weight: 700;
             border-radius: 14px;
             cursor: pointer;
@@ -113,7 +123,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .btn-main:hover {
@@ -149,21 +159,38 @@
         }
 
         /* Stats bar */
-        .stats-bar {
+        .stats-row {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
+            align-items: center;
             background: rgba(0, 0, 0, 0.25);
-            padding: 12px;
+            padding: 10px 14px;
             border-radius: 14px;
             margin-bottom: 16px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .stats-bar span {
+        .stats-row span {
             color: var(--text);
             font-weight: 700;
+        }
+
+        .btn-peek {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-peek:hover {
+            background: rgba(99, 102, 241, 0.3);
         }
 
         /* Puzzle Board */
@@ -171,13 +198,13 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 5px;
-            width: 320px;
-            height: 320px;
+            gap: 4px;
+            width: 300px;
+            height: 300px;
             margin: 0 auto 16px auto;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
-            padding: 6px;
+            border-radius: 16px;
+            padding: 4px;
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -185,9 +212,9 @@
             position: relative;
             width: 100%;
             height: 100%;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            background-size: 308px 308px;
+            background-size: 292px 292px;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
         }
@@ -203,28 +230,54 @@
             box-shadow: 0 0 20px var(--accent);
         }
 
-        .tile-number {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(4px);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 3px 7px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Modal Popup ชนะเกม */
-        #win-modal {
+        /* Peek Modal (สำหรับกดดูรูปเต็ม) */
+        #peek-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        #peek-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .peek-content {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .peek-content img {
+            width: 280px;
+            height: 280px;
+            border-radius: 12px;
+            display: block;
+            margin-bottom: 10px;
+            object-fit: cover;
+        }
+
+        /* Win Modal */
+        #win-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(8px);
             display: flex;
             justify-content: center;
@@ -249,12 +302,6 @@
             width: 90%;
             text-align: center;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        #win-modal.show .modal-content {
-            transform: scale(1);
         }
 
         .trophy-icon {
@@ -276,26 +323,13 @@
             }
         }
 
-        .modal-content h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #34d399;
-            margin-bottom: 6px;
-        }
-
-        .modal-content p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-
         .modal-stats {
             display: flex;
             justify-content: space-around;
             background: rgba(0, 0, 0, 0.3);
             padding: 12px;
             border-radius: 14px;
-            margin-bottom: 20px;
+            margin: 16px 0 20px 0;
             font-size: 0.85rem;
         }
     </style>
@@ -306,7 +340,10 @@
     <div class="container">
         <div class="badge-icon">🧩</div>
         <h1>Photo Jigsaw 3x3</h1>
-        <p class="subtitle">ถ่ายรูปหรือเลือกรูปภาพเพื่อสร้างเกมจิ๊กซอว์ของคุณ</p>
+        <p class="subtitle">ถ่ายรูปตัวเองแล้วมาลองต่อจิ๊กซอว์กัน!</p>
+        <div class="instruction-bar">
+            ℹ️ แตะเลือกชิ้นส่วน 2 ชิ้นเพื่อสลับตำแหน่งกัน
+        </div>
 
         <!-- 1. CAMERA SECTION -->
         <div id="camera-section">
@@ -321,31 +358,40 @@
 
         <!-- 2. GAME SECTION -->
         <div id="game-section" class="hidden">
-            <div class="stats-bar">
-                <div>เวลาที่ใช้: <span id="timer">00:00</span></div>
-                <div>จำนวนการสลับ: <span id="move-count">0</span> ครั้ง</div>
+            <div class="stats-row">
+                <div>ขยับ: <span id="move-count">0</span> ครั้ง</div>
+                <button id="peek-btn" class="btn-peek">👁️ แอบดูรูปเต็ม</button>
             </div>
 
             <div id="puzzle-board"></div>
 
             <div class="controls-row">
-                <button id="hint-btn" class="btn-secondary">👁️ ซ่อน/แสดง ตัวเลข</button>
-                <button id="restart-btn" class="btn-secondary">🔄 ถ่ายใหม่</button>
+                <button id="restart-btn" class="btn-secondary">🔄 สลับใหม่</button>
+                <button id="cam-back-btn" class="btn-secondary"
+                    style="color:#f43f5e; border-color:rgba(244,63,94,0.3);">📸 ถ่ายใหม่</button>
             </div>
         </div>
     </div>
 
-    <!-- WIN MODAL POPUP -->
+    <!-- PEEK IMAGE MODAL -->
+    <div id="peek-modal">
+        <div class="peek-content">
+            <img id="peek-img" src="" alt="Full Image">
+            <p style="font-size:0.8rem; color:var(--text-muted);">ปล่อยคลิกหรือแตะเพื่อปิด</p>
+        </div>
+    </div>
+
+    <!-- WIN MODAL -->
     <div id="win-modal">
         <div class="modal-content">
             <div class="trophy-icon">🏆</div>
-            <h2>ยินดีด้วย!</h2>
-            <p>คุณต่อจิ๊กซอว์สำเร็จแล้ว!</p>
+            <h2 style="color:#34d399; font-size:1.5rem; margin-bottom:6px;">ยินดีด้วย!</h2>
+            <p style="color:var(--text-muted); font-size:0.9rem;">คุณต่อจิ๊กซอว์สำเร็จแล้ว!</p>
 
             <div class="modal-stats">
-                <div>เวลาที่ใช้<br><span id="final-time" style="color:#fff; font-weight:bold;">00:52</span></div>
-                <div style="border-left: 1px solid rgba(255,255,255,0.1);">จำนวนการสลับ<br><span id="final-moves"
-                        style="color:#fff; font-weight:bold;">17 ครั้ง</span></div>
+                <div>เวลาที่ใช้<br><span id="final-time" style="color:#fff; font-weight:bold;">00:00</span></div>
+                <div style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px;">จำนวนการสลับ<br><span
+                        id="final-moves" style="color:#fff; font-weight:bold;">0 ครั้ง</span></div>
             </div>
 
             <button id="modal-restart-btn" class="btn-main">🎉 เล่นใหม่อีกครั้ง</button>
@@ -363,13 +409,16 @@
         const gameSection = document.getElementById('game-section');
         const puzzleBoard = document.getElementById('puzzle-board');
         const restartBtn = document.getElementById('restart-btn');
+        const camBackBtn = document.getElementById('cam-back-btn');
         const modalRestartBtn = document.getElementById('modal-restart-btn');
-        const hintBtn = document.getElementById('hint-btn');
         const winModal = document.getElementById('win-modal');
         const moveCountEl = document.getElementById('move-count');
         const timerEl = document.getElementById('timer');
         const finalTimeEl = document.getElementById('final-time');
         const finalMovesEl = document.getElementById('final-moves');
+        const peekBtn = document.getElementById('peek-btn');
+        const peekModal = document.getElementById('peek-modal');
+        const peekImg = document.getElementById('peek-img');
 
         let currentStream = null;
         let facingMode = "user";
@@ -377,7 +426,6 @@
         let originalPieces = [];
         let selectedTileIndex = null;
         let moves = 0;
-        let showHints = true;
         let timerInterval = null;
         let secondsElapsed = 0;
         let isGameOver = false;
@@ -406,16 +454,18 @@
 
         captureBtn.addEventListener('click', () => {
             const ctx = hiddenCanvas.getContext('2d');
-            hiddenCanvas.width = 320;
-            hiddenCanvas.height = 320;
+            hiddenCanvas.width = 300;
+            hiddenCanvas.height = 300;
 
             ctx.save();
             if (facingMode === "user") {
-                ctx.translate(320, 0);
+                ctx.translate(300, 0);
                 ctx.scale(-1, 1);
             }
-            ctx.drawImage(video, 0, 0, 320, 320);
+            ctx.drawImage(video, 0, 0, 300, 300);
             ctx.restore();
+
+            peekImg.src = hiddenCanvas.toDataURL();
 
             cameraSection.classList.add('hidden');
             gameSection.classList.remove('hidden');
@@ -439,15 +489,18 @@
                 const col = i % 3;
                 originalPieces.push({
                     id: i,
-                    bgPosition: `-${col * 106.66}px -${row * 106.66}px`,
+                    bgPosition: `-${col * 100}px -${row * 100}px`,
                     imgUrl: imageDataUrl
                 });
             }
 
+            shuffleAndRender();
+        }
+
+        function shuffleAndRender() {
             do {
                 currentPieces = [...originalPieces].sort(() => Math.random() - 0.5);
             } while (checkIsSolved());
-
             renderBoard();
         }
 
@@ -460,13 +513,6 @@
 
                 tile.style.backgroundImage = `url(${piece.imgUrl})`;
                 tile.style.backgroundPosition = piece.bgPosition;
-
-                if (showHints && !isGameOver) {
-                    const numLabel = document.createElement('div');
-                    numLabel.className = 'tile-number';
-                    numLabel.innerText = piece.id + 1;
-                    tile.appendChild(numLabel);
-                }
 
                 tile.addEventListener('click', () => handleTileClick(index));
                 puzzleBoard.appendChild(tile);
@@ -503,8 +549,11 @@
             isGameOver = true;
             clearInterval(timerInterval);
 
-            finalTimeEl.innerText = timerEl.innerText;
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            finalTimeEl.innerText = `${mins}:${secs}`;
             finalMovesEl.innerText = `${moves} ครั้ง`;
+
             winModal.classList.add('show');
 
             if (typeof confetti === 'function') {
@@ -520,18 +569,18 @@
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 secondsElapsed++;
-                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-                const secs = String(secondsElapsed % 60).padStart(2, '0');
-                timerEl.innerText = `${mins}:${secs}`;
             }, 1000);
         }
 
-        hintBtn.addEventListener('click', () => {
-            showHints = !showHints;
-            renderBoard();
-        });
+        // Peek image events
+        peekBtn.addEventListener('mousedown', () => peekModal.classList.add('show'));
+        peekBtn.addEventListener('mouseup', () => peekModal.classList.remove('show'));
+        peekBtn.addEventListener('touchstart', (e) => { e.preventDefault(); peekModal.classList.add('show'); });
+        peekBtn.addEventListener('touchend', () => peekModal.classList.remove('show'));
 
-        const resetToCamera = () => {
+        restartBtn.addEventListener('click', shuffleAndRender);
+
+        const backToCamera = () => {
             clearInterval(timerInterval);
             winModal.classList.remove('show');
             gameSection.classList.add('hidden');
@@ -539,8 +588,8 @@
             startCamera();
         };
 
-        restartBtn.addEventListener('click', resetToCamera);
-        modalRestartBtn.addEventListener('click', resetToCamera);
+        camBackBtn.addEventListener('click', backToCamera);
+        modalRestartBtn.addEventListener('click', backToCamera);
     </script>
 </body>
 
