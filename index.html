@@ -5,29 +5,448 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3x3 Photo Jigsaw Puzzle</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #ec4899;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #a5b4fc, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* Video & Canvas Container */
+        .media-box {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 20px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: #000;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            /* Mirror view for camera */
+        }
+
+        /* Control Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        button.btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        button.btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .stats-bar span {
+            color: var(--text);
+            font-weight: bold;
+        }
+
+        /* Jigsaw Grid */
+        #puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 15px auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 4px;
+        }
+
+        .tile {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            background-size: 300px 300px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .tile:hover {
+            transform: scale(0.97);
+        }
+
+        .tile.selected {
+            outline: 3px solid var(--accent);
+            transform: scale(0.93);
+            z-index: 10;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .tile-number {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Win Banner */
+        #win-msg {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #34d399;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 
 <body>
+
     <div class="container">
-        <h1>📸 เกมจิ๊กซอว์จากรูปถ่าย (3x3)</h1>
+        <h1>📸 3x3 Photo Jigsaw</h1>
+        <p class="subtitle">ถ่ายรูปตัวเองเพื่อสร้างเกมต่อจิ๊กซอว์!</p>
 
-        <!-- โซนกล้องและถ่ายรูป -->
+        <!-- 1. CAMERA SECTION -->
         <div id="camera-section">
-            <video id="webcam" autoplay playsinline></video>
-            <button id="capture-btn">📸 ถ่ายรูปเพื่อสร้างจิ๊กซอว์</button>
-            <canvas id="hidden-canvas" style="display:none;"></canvas>
+            <div class="media-box">
+                <video id="webcam" autoplay playsinline></video>
+            </div>
+            <div class="btn-group">
+                <button id="switch-cam-btn" class="btn-secondary">🔄 สลับกล้อง</button>
+                <button id="capture-btn">📸 ถ่ายรูปเล่นเกม</button>
+            </div>
         </div>
 
-        <!-- โซนเกมจิ๊กซอว์ -->
+        <!-- 2. GAME SECTION -->
         <div id="game-section" class="hidden">
+            <div class="stats-bar">
+                <div>เดิน: <span id="move-count">0</span> ครั้ง</div>
+                <div>เวลา: <span id="timer">00:00</span></div>
+            </div>
+
+            <div id="win-msg" class="hidden">🎉 สุดยอดไปเลย! ต่อจิ๊กซอว์สำเร็จแล้ว!</div>
+
             <div id="puzzle-board"></div>
-            <p id="status-msg">คลิกเลือก 2 ชิ้นเพื่อสลับตำแหน่งกัน ให้รูปสมบูรณ์!</p>
-            <button id="restart-btn">🔄 ถ่ายใหม่</button>
+
+            <div class="btn-group">
+                <button id="hint-btn" class="btn-secondary">👁️ ซ่อน/แสดง ตัวเลขคำใบ้</button>
+                <button id="restart-btn">🔄 ถ่ายใหม่</button>
+            </div>
         </div>
+
+        <!-- Hidden Canvas for Image Processing -->
+        <canvas id="hidden-canvas" style="display:none;"></canvas>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Elements
+        const video = document.getElementById('webcam');
+        const captureBtn = document.getElementById('capture-btn');
+        const switchCamBtn = document.getElementById('switch-cam-btn');
+        const hiddenCanvas = document.getElementById('hidden-canvas');
+        const cameraSection = document.getElementById('camera-section');
+        const gameSection = document.getElementById('game-section');
+        const puzzleBoard = document.getElementById('puzzle-board');
+        const restartBtn = document.getElementById('restart-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const winMsg = document.getElementById('win-msg');
+        const moveCountEl = document.getElementById('move-count');
+        const timerEl = document.getElementById('timer');
+
+        // States
+        let currentStream = null;
+        let facingMode = "user"; // 'user' (กล้องหน้า) หรือ 'environment' (กล้องหลัง)
+        let currentPieces = [];
+        let originalPieces = [];
+        let selectedTileIndex = null;
+        let moves = 0;
+        let showHints = true;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let isGameOver = false;
+
+        // 1. Start Camera
+        async function startCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: { ideal: 600 }, height: { ideal: 600 }, facingMode: facingMode }
+                });
+                video.srcObject = currentStream;
+            } catch (err) {
+                alert("ไม่สามารถเปิดกล้องได้ กรุณาอนุญาตสิทธิ์ใช้งานกล้องในเบราว์เซอร์");
+            }
+        }
+
+        switchCamBtn.addEventListener('click', () => {
+            facingMode = facingMode === "user" ? "environment" : "user";
+            video.style.transform = facingMode === "user" ? "scaleX(-1)" : "scaleX(1)";
+            startCamera();
+        });
+
+        startCamera();
+
+        // 2. Capture Photo & Generate Jigsaw
+        captureBtn.addEventListener('click', () => {
+            const ctx = hiddenCanvas.getContext('2d');
+            hiddenCanvas.width = 300;
+            hiddenCanvas.height = 300;
+
+            // Draw mirrored video if using front camera
+            ctx.save();
+            if (facingMode === "user") {
+                ctx.translate(300, 0);
+                ctx.scale(-1, 1);
+            }
+            ctx.drawImage(video, 0, 0, 300, 300);
+            ctx.restore();
+
+            // Switch views
+            cameraSection.classList.add('hidden');
+            gameSection.classList.remove('hidden');
+
+            initGame();
+        });
+
+        // 3. Init Game Logic
+        function initGame() {
+            moves = 0;
+            secondsElapsed = 0;
+            isGameOver = false;
+            selectedTileIndex = null;
+            winMsg.classList.add('hidden');
+            moveCountEl.innerText = moves;
+            startTimer();
+
+            const imageDataUrl = hiddenCanvas.toDataURL();
+            originalPieces = [];
+
+            // Split 3x3
+            for (let i = 0; i < 9; i++) {
+                const row = Math.floor(i / 3);
+                const col = i % 3;
+                originalPieces.push({
+                    id: i,
+                    bgPosition: `-${col * 100}px -${row * 100}px`,
+                    imgUrl: imageDataUrl
+                });
+            }
+
+            // Shuffle pieces (ensure it's not already solved)
+            do {
+                currentPieces = [...originalPieces].sort(() => Math.random() - 0.5);
+            } while (checkIsSolved());
+
+            renderBoard();
+        }
+
+        // 4. Render Board
+        function renderBoard() {
+            puzzleBoard.innerHTML = '';
+            currentPieces.forEach((piece, index) => {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                if (selectedTileIndex === index) tile.classList.add('selected');
+
+                tile.style.backgroundImage = `url(${piece.imgUrl})`;
+                tile.style.backgroundPosition = piece.bgPosition;
+
+                if (showHints && !isGameOver) {
+                    const numLabel = document.createElement('div');
+                    numLabel.className = 'tile-number';
+                    numLabel.innerText = piece.id + 1;
+                    tile.appendChild(numLabel);
+                }
+
+                tile.addEventListener('click', () => handleTileClick(index));
+                puzzleBoard.appendChild(tile);
+            });
+        }
+
+        // 5. Handle Tile Click & Swapping
+        function handleTileClick(index) {
+            if (isGameOver) return;
+
+            if (selectedTileIndex === null) {
+                selectedTileIndex = index;
+            } else if (selectedTileIndex === index) {
+                selectedTileIndex = null; // deselect
+            } else {
+                // Swap pieces
+                [currentPieces[selectedTileIndex], currentPieces[index]] =
+                    [currentPieces[index], currentPieces[selectedTileIndex]];
+
+                selectedTileIndex = null;
+                moves++;
+                moveCountEl.innerText = moves;
+
+                if (checkIsSolved()) {
+                    handleWin();
+                }
+            }
+            renderBoard();
+        }
+
+        // 6. Check Win Condition
+        function checkIsSolved() {
+            return currentPieces.every((piece, idx) => piece.id === idx);
+        }
+
+        function handleWin() {
+            isGameOver = true;
+            clearInterval(timerInterval);
+            winMsg.classList.remove('hidden');
+
+            // Trigger Confetti Celebration
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        // 7. Timer & Helpers
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                timerEl.innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        hintBtn.addEventListener('click', () => {
+            showHints = !showHints;
+            renderBoard();
+        });
+
+        restartBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            gameSection.classList.add('hidden');
+            cameraSection.classList.remove('hidden');
+        });
+    </script>
 </body>
 
 </html>
