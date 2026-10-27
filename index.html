@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3x3 Photo Jigsaw Puzzle</title>
-    <!-- โหลดไลบรารีสำหรับทำเอฟเฟกต์กระดาษโปรย -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -242,6 +241,7 @@
             justify-content: center;
             align-items: center;
             z-index: 99999;
+            /* เลเยอร์กล่องรางวัล */
         }
 
         .modal-box {
@@ -355,14 +355,13 @@
         </div>
     </div>
 
-    <!-- WIN MODAL (พร้อมเอฟเฟกต์กระดาษโปรย) -->
+    <!-- WIN MODAL -->
     <div id="win-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="trophy-icon">🏆</div>
             <h2 style="color:#16a34a; font-size:1.4rem; margin-bottom:4px;">ยินดีด้วย!</h2>
             <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">คุณต่อจิ๊กซอว์สำเร็จแล้ว 🎉</p>
 
-            <!-- โชว์รูปเต็มหลังต่อเสร็จ -->
             <img id="win-img-preview" class="win-preview-img" src="" alt="Completed Puzzle">
 
             <div class="modal-stats">
@@ -537,12 +536,13 @@
 
             winModal.style.display = 'flex';
 
-            // เรียกใช้งานเอฟเฟกต์กระดาษโปรย (Confetti) แบบจัดเต็ม
+            // สั่งให้ Confetti เด้งขึ้นมาอยู่ชั้นบนสุดทับทุกเลเยอร์ด้วย zIndex: 999999
             if (typeof confetti === 'function') {
                 confetti({
-                    particleCount: 150,
-                    spread: 90,
-                    origin: { y: 0.6 }
+                    particleCount: 180,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    zIndex: 999999
                 });
             }
         }
