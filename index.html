@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3x3 Photo Jigsaw Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>📸 เกมจิ๊กซอว์จากรูปถ่าย (3x3)</h1>
+
+        <!-- โซนกล้องและถ่ายรูป -->
+        <div id="camera-section">
+            <video id="webcam" autoplay playsinline></video>
+            <button id="capture-btn">📸 ถ่ายรูปเพื่อสร้างจิ๊กซอว์</button>
+            <canvas id="hidden-canvas" style="display:none;"></canvas>
+        </div>
+
+        <!-- โซนเกมจิ๊กซอว์ -->
+        <div id="game-section" class="hidden">
+            <div id="puzzle-board"></div>
+            <p id="status-msg">คลิกเลือก 2 ชิ้นเพื่อสลับตำแหน่งกัน ให้รูปสมบูรณ์!</p>
+            <button id="restart-btn">🔄 ถ่ายใหม่</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
