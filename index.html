@@ -230,14 +230,14 @@
             box-shadow: 0 0 20px var(--accent);
         }
 
-        /* Peek Modal (สำหรับกดดูรูปเต็ม) */
+        /* Peek Modal (กดคลิกเพื่อเปิด-ปิด) */
         #peek-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(6px);
             display: flex;
             justify-content: center;
@@ -373,11 +373,11 @@
         </div>
     </div>
 
-    <!-- PEEK IMAGE MODAL -->
+    <!-- PEEK IMAGE MODAL (คลิกเปิด-ปิดได้สะดวก) -->
     <div id="peek-modal">
         <div class="peek-content">
             <img id="peek-img" src="" alt="Full Image">
-            <p style="font-size:0.8rem; color:var(--text-muted);">ปล่อยคลิกหรือแตะเพื่อปิด</p>
+            <button id="close-peek-btn" class="btn-secondary" style="width:100%;">✖️ ปิดรูปภาพ</button>
         </div>
     </div>
 
@@ -413,12 +413,12 @@
         const modalRestartBtn = document.getElementById('modal-restart-btn');
         const winModal = document.getElementById('win-modal');
         const moveCountEl = document.getElementById('move-count');
-        const timerEl = document.getElementById('timer');
         const finalTimeEl = document.getElementById('final-time');
         const finalMovesEl = document.getElementById('final-moves');
         const peekBtn = document.getElementById('peek-btn');
         const peekModal = document.getElementById('peek-modal');
         const peekImg = document.getElementById('peek-img');
+        const closePeekBtn = document.getElementById('close-peek-btn');
 
         let currentStream = null;
         let facingMode = "user";
@@ -572,11 +572,12 @@
             }, 1000);
         }
 
-        // Peek image events
-        peekBtn.addEventListener('mousedown', () => peekModal.classList.add('show'));
-        peekBtn.addEventListener('mouseup', () => peekModal.classList.remove('show'));
-        peekBtn.addEventListener('touchstart', (e) => { e.preventDefault(); peekModal.classList.add('show'); });
-        peekBtn.addEventListener('touchend', () => peekModal.classList.remove('show'));
+        // ระบบคลิกเปิด-ปิดปุ่มดูรูปเต็ม
+        peekBtn.addEventListener('click', () => peekModal.classList.add('show'));
+        closePeekBtn.addEventListener('click', () => peekModal.classList.remove('show'));
+        peekModal.addEventListener('click', (e) => {
+            if (e.target === peekModal) peekModal.classList.remove('show');
+        });
 
         restartBtn.addEventListener('click', shuffleAndRender);
 
