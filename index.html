@@ -5,23 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3x3 Photo Jigsaw Puzzle</title>
+    <!-- โหลดไลบรารีสำหรับทำเอฟเฟกต์กระดาษโปรย -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary: #9333ea;
-            /* สีม่วงหลักสดใส */
             --primary-hover: #7e22ce;
-            /* สีม่วงเข้มขึ้นตอนเอาเมาส์ชี้ */
             --accent: #f43f5e;
-            /* สีไฮไลต์ชมพูน่ารัก */
             --bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #fae8ff 100%);
-            /* กราเดียนต์พื้นหลังโทนขาว-ม่วงอ่อนละมุน */
-            --card-bg: rgba(255, 255, 255, 0.85);
-            /* พื้นหลังการ์ดสีขาวโปร่งแสง */
-            --text: #334155;
-            /* สีตัวหนังสือเข้มอ่านง่าย */
+            --card-bg: #ffffff;
+            --text: #1e293b;
             --text-muted: #64748b;
-            /* สีตัวหนังสือรอง */
         }
 
         * {
@@ -43,35 +37,33 @@
 
         .container {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 28px;
             padding: 28px;
             max-width: 440px;
             width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(147, 51, 234, 0.15);
             text-align: center;
+            border: 1px solid #f3e8ff;
         }
 
         .badge-icon {
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, #818cf8, #6366f1);
+            background: linear-gradient(135deg, #c084fc, #9333ea);
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 14px auto;
             font-size: 26px;
-            box-shadow: 0 10px 20px rgba(99, 102, 241, .4);
+            box-shadow: 0 8px 16px rgba(147, 51, 234, 0.25);
         }
 
         h1 {
             font-size: 1.6rem;
             font-weight: 800;
             margin-bottom: 6px;
-            background: linear-gradient(135deg, #e0e7ff, #f472b6);
+            background: linear-gradient(135deg, #9333ea, #db2777);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -85,15 +77,16 @@
         }
 
         .instruction-bar {
-            background: rgba(255, 255, 255, 0.06);
-            color: #cbd5e1;
+            background: #f8fafc;
+            color: #475569;
             font-size: 0.82rem;
             padding: 8px 12px;
             border-radius: 10px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid #e2e8f0;
         }
 
+        /* Media Box */
         .media-box {
             position: relative;
             width: 300px;
@@ -101,9 +94,9 @@
             margin: 0 auto 16px auto;
             border-radius: 20px;
             overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            border: 3px solid #f1f5f9;
             background: #090d16;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
         }
 
         video {
@@ -113,9 +106,10 @@
             transform: scaleX(-1);
         }
 
+        /* Buttons */
         .btn-main {
             width: 100%;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            background: linear-gradient(135deg, #a855f7, #9333ea);
             color: white;
             border: none;
             padding: 14px 20px;
@@ -124,7 +118,7 @@
             border-radius: 14px;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 6px 15px rgba(147, 51, 234, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -134,13 +128,13 @@
 
         .btn-main:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 20px rgba(147, 51, 234, 0.4);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
+            background: #f8fafc;
             color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #cbd5e1;
             padding: 10px 16px;
             font-size: 0.88rem;
             font-weight: 600;
@@ -150,7 +144,7 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: #f1f5f9;
         }
 
         .controls-row {
@@ -164,17 +158,18 @@
             display: none !important;
         }
 
+        /* Stats bar */
         .stats-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.25);
+            background: #f8fafc;
             padding: 10px 14px;
             border-radius: 14px;
             margin-bottom: 16px;
             font-size: 0.88rem;
             color: var(--text-muted);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #e2e8f0;
         }
 
         .stats-row span {
@@ -183,9 +178,9 @@
         }
 
         .btn-peek {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-            border: 1px solid rgba(99, 102, 241, 0.4);
+            background: #f3e8ff;
+            color: #9333ea;
+            border: 1px solid #d8b4fe;
             padding: 6px 12px;
             border-radius: 8px;
             font-size: 0.8rem;
@@ -195,9 +190,10 @@
         }
 
         .btn-peek:hover {
-            background: rgba(99, 102, 241, 0.3);
+            background: #e9d5ff;
         }
 
+        /* Puzzle Board */
         #puzzle-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -206,10 +202,10 @@
             width: 300px;
             height: 300px;
             margin: 0 auto 16px auto;
-            background: rgba(0, 0, 0, 0.3);
+            background: #f1f5f9;
             border-radius: 16px;
             padding: 4px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 3px solid #e2e8f0;
         }
 
         .tile {
@@ -219,8 +215,8 @@
             border-radius: 8px;
             cursor: pointer;
             background-size: 292px 292px;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+            transition: transform 0.15s ease;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
         }
 
         .tile:hover {
@@ -231,18 +227,17 @@
             outline: 3px solid var(--accent);
             transform: scale(0.92);
             z-index: 10;
-            box-shadow: 0 0 20px var(--accent);
         }
 
-        /* Modal Layout แบบควบคุมด้วย JavaScript ตรงๆ ป้องกันการค้าง */
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(6px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -250,29 +245,40 @@
         }
 
         .modal-box {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             padding: 24px;
-            border-radius: 24px;
+            border-radius: 28px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             max-width: 340px;
             width: 90%;
         }
 
-        .modal-box img {
+        .win-preview-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin: 0 auto 14px auto;
+            display: block;
+            border: 3px solid #f3e8ff;
+            box-shadow: 0 8px 16px rgba(147, 51, 234, 0.15);
+        }
+
+        .modal-box img.peek-full {
             width: 280px;
             height: 280px;
             border-radius: 16px;
             display: block;
             margin: 0 auto 16px auto;
             object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid #e2e8f0;
         }
 
         .trophy-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
+            font-size: 40px;
+            margin-bottom: 8px;
             display: inline-block;
             animation: bounce 1.5s infinite ease-in-out;
         }
@@ -285,18 +291,20 @@
             }
 
             50% {
-                transform: translateY(-8px);
+                transform: translateY(-6px);
             }
         }
 
         .modal-stats {
             display: flex;
             justify-content: space-around;
-            background: rgba(0, 0, 0, 0.3);
+            background: #f8fafc;
             padding: 12px;
             border-radius: 14px;
-            margin: 16px 0 20px 0;
+            margin: 14px 0 16px 0;
             font-size: 0.85rem;
+            border: 1px solid #e2e8f0;
+            color: var(--text-muted);
         }
     </style>
 </head>
@@ -305,7 +313,7 @@
 
     <div class="container">
         <div class="badge-icon">🧩</div>
-        <h1>Photo Puzzles</h1>
+        <h1>Photo Jigsaw 3x3</h1>
         <p class="subtitle">ถ่ายรูปตัวเองแล้วมาลองต่อจิ๊กซอว์กัน!</p>
         <div class="instruction-bar">
             ℹ️ แตะเลือกชิ้นส่วน 2 ชิ้นเพื่อสลับตำแหน่งกัน
@@ -333,8 +341,8 @@
 
             <div class="controls-row">
                 <button id="restart-btn" class="btn-secondary">🔄 สลับใหม่</button>
-                <button id="cam-back-btn" class="btn-secondary"
-                    style="color:#f43f5e; border-color:rgba(244,63,94,0.3);">📸 ถ่ายใหม่</button>
+                <button id="cam-back-btn" class="btn-secondary" style="color:#e11d48; border-color:#fecdd3;">📸
+                    ถ่ายใหม่</button>
             </div>
         </div>
     </div>
@@ -342,22 +350,25 @@
     <!-- PEEK IMAGE MODAL -->
     <div id="peek-modal" class="modal-overlay">
         <div class="modal-box">
-            <img id="peek-img" src="" alt="Full Image">
+            <img id="peek-img" class="peek-full" src="" alt="Full Image">
             <button id="close-peek-btn" class="btn-main">✕ ปิดรูปภาพ</button>
         </div>
     </div>
 
-    <!-- WIN MODAL -->
+    <!-- WIN MODAL (พร้อมเอฟเฟกต์กระดาษโปรย) -->
     <div id="win-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="trophy-icon">🏆</div>
-            <h2 style="color:#34d399; font-size:1.5rem; margin-bottom:6px;">ยินดีด้วย!</h2>
-            <p style="color:var(--text-muted); font-size:0.9rem;">คุณต่อจิ๊กซอว์สำเร็จแล้ว!</p>
+            <h2 style="color:#16a34a; font-size:1.4rem; margin-bottom:4px;">ยินดีด้วย!</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">คุณต่อจิ๊กซอว์สำเร็จแล้ว 🎉</p>
+
+            <!-- โชว์รูปเต็มหลังต่อเสร็จ -->
+            <img id="win-img-preview" class="win-preview-img" src="" alt="Completed Puzzle">
 
             <div class="modal-stats">
-                <div>เวลาที่ใช้<br><span id="final-time" style="color:#fff; font-weight:bold;">00:00</span></div>
-                <div style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px;">จำนวนการสลับ<br><span
-                        id="final-moves" style="color:#fff; font-weight:bold;">0 ครั้ง</span></div>
+                <div>เวลาที่ใช้<br><span id="final-time" style="color:var(--text); font-weight:bold;">00:00</span></div>
+                <div style="border-left: 1px solid #e2e8f0; padding-left: 15px;">จำนวนการสลับ<br><span id="final-moves"
+                        style="color:var(--text); font-weight:bold;">0 ครั้ง</span></div>
             </div>
 
             <button id="modal-restart-btn" class="btn-main">🎉 เล่นใหม่อีกครั้ง</button>
@@ -384,6 +395,7 @@
         const peekBtn = document.getElementById('peek-btn');
         const peekModal = document.getElementById('peek-modal');
         const peekImg = document.getElementById('peek-img');
+        const winImgPreview = document.getElementById('win-img-preview');
         const closePeekBtn = document.getElementById('close-peek-btn');
 
         let currentStream = null;
@@ -431,7 +443,9 @@
             ctx.drawImage(video, 0, 0, 300, 300);
             ctx.restore();
 
-            peekImg.src = hiddenCanvas.toDataURL();
+            const currentImageUrl = hiddenCanvas.toDataURL();
+            peekImg.src = currentImageUrl;
+            winImgPreview.src = currentImageUrl;
 
             cameraSection.classList.add('hidden');
             gameSection.classList.remove('hidden');
@@ -523,10 +537,11 @@
 
             winModal.style.display = 'flex';
 
+            // เรียกใช้งานเอฟเฟกต์กระดาษโปรย (Confetti) แบบจัดเต็ม
             if (typeof confetti === 'function') {
                 confetti({
-                    particleCount: 120,
-                    spread: 80,
+                    particleCount: 150,
+                    spread: 90,
                     origin: { y: 0.6 }
                 });
             }
@@ -539,7 +554,6 @@
             }, 1000);
         }
 
-        // ควบคุมการเปิด-ปิดแบบใช้ style.display ตรงๆ รับรองไม่ค้างแน่นอน
         peekBtn.addEventListener('click', () => {
             peekModal.style.display = 'flex';
         });
